@@ -1,0 +1,57 @@
+version: '3.1'
+services:
+
+  servicio:
+    build: ../
+    container_name: servicio
+    environment:
+      - "JAEGER_AGENT_HOST=jaeger"
+      - "JAEGER_AGENT_PORT=6831"
+    ports:
+      - "8080:8080"
+      - "8083:8383"
+    restart: always
+    links:
+      - jaeger
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.0
+    environment:
+      - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.8.0
+    environment:
+      - "SERVER_NAME=kibana"
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+    ports:
+      - 5601:5601
+    links:
+      - elasticsearch
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.12
+    environment:
+      - "SPAN_STORAGE_TYPE=elasticsearch"
+      - "ES_SERVER_URLS=http://elasticsearch:9200"
+      - "ES_TAGS_AS_FIELDS_ALL=true"
+    ports:
+      - "16686:16686"
+    restart: on-failure
+    links:
+      - elasticsearch
+
+networks:
+  elk:
+    driver: bridge
+
+
