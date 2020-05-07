@@ -44,6 +44,7 @@ module.exports = class extends BaseGenerator {
         const mainJavaTemplates = [
             'Application.java',
             'config/WebMvcConfig.java',
+            'config/TracerConfig.java',
             'config/SwaggerConfig.java',
             'utils/Constants.java'
         ];
