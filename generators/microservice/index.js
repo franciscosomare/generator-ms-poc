@@ -33,6 +33,9 @@ module.exports = class extends BaseGenerator {
         this.generateGithubCIfile(this.configOptions);
         this._generateDockerComposeFiles(this.configOptions);
         this._generateAppCode(this.configOptions);
+        if (this.configOptions.distTracing === true) {
+            this._generateDistTracingConfig(this.configOptions);
+        }
     }
 
     end() {
@@ -44,7 +47,6 @@ module.exports = class extends BaseGenerator {
         const mainJavaTemplates = [
             'Application.java',
             'config/WebMvcConfig.java',
-            'config/TracerConfig.java',
             'config/SwaggerConfig.java',
             'utils/Constants.java'
         ];
@@ -74,11 +76,6 @@ module.exports = class extends BaseGenerator {
 
     _generateDockerComposeFiles(configOptions) {
         this._generateAppDockerComposeFile(configOptions);
-        this._generateELKConfig(configOptions);
-        this._generateMonitoringConfig(configOptions);
-        if(configOptions.distTracing === true) {
-            this._generateDistTracingDockerComposeFile(configOptions);
-        }
     }
 
     _generateAppDockerComposeFile(configOptions) {
@@ -93,6 +90,13 @@ module.exports = class extends BaseGenerator {
             'docker-compose-tracing.yml',
         ];
         this.generateFiles(configOptions, resTemplates, 'app/','docker/');
+    }
+
+    _generateDistTracingConfig(configOptions) {
+        const restTemplates = [
+            'config/TracerConfig.java'
+        ];
+        this.generateMainJavaCode(configOptions, restTemplates);
     }
 
     _generateELKConfig(configOptions) {

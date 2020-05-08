@@ -56,6 +56,19 @@ function prompting() {
             default: 'postgresql'
         },
         {
+            type: 'confirm',
+            name: 'distTracing',
+            message: 'Do you want to use Jaeger as Distributed Tracing?',
+            default: true
+        },
+        {
+            when: response => response.distTracing === true,
+            type: 'confirm',
+            name: 'elkjaeger',
+            message: 'Do you want to use ELK to save your tracing?',
+            default: true
+        },
+        {
             type: 'list',
             name: 'buildTool',
             message: 'Which build tool do you want to use?',
@@ -80,8 +93,11 @@ function prompting() {
             this.configOptions.databaseType = 'none';
             this.configOptions.dbMigrationTool = 'none';
         }
+        if(this.configOptions.distTracing == false) {
+            this.configOptions.elkjaeger = false;
+        }
+
         const features = this.configOptions.features || [];
-        this.configOptions.distTracing = features.includes('distTracing');
         this.configOptions.eurekaClient = features.includes('eurekaClient');
         this.configOptions.configClient = features.includes('configClient');
         done();

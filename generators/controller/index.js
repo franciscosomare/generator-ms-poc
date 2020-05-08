@@ -41,6 +41,7 @@ module.exports = class extends BaseGenerator {
 
     writing() {
         this._generateAppCode(this.configOptions);
+        this._generateController(this.configOptions);
     }
 
     _generateAppCode(configOptions) {
@@ -48,13 +49,27 @@ module.exports = class extends BaseGenerator {
             {src: 'entity/Entity.java', dest: 'entity/'+configOptions.entityName+'.java'},
             {src: 'repository/Repository.java', dest: 'repository/'+configOptions.entityName+'Repository.java'},
             {src: 'service/Service.java', dest: 'service/'+configOptions.entityName+'Service.java'},
-            {src: 'web/controller/Controller.java', dest: 'web/controller/'+configOptions.entityName+'Controller.java'},
         ];
         this.generateMainJavaCode(configOptions, mainJavaTemplates);
 
         const testJavaTemplates = [
         ];
         this.generateTestJavaCode(configOptions, testJavaTemplates);
+    }
+
+    _generateController(configOptions) {
+        var mainJavaController = [];
+
+        if (configOptions.distTracing) {
+            mainJavaController = [
+                {src: 'controller/Controller.java', dest: 'controller/'+configOptions.entityName+'Controller.java'},
+            ];
+        } else {
+            mainJavaController = [
+                {src: 'web/controller/Controller.java', dest: 'web/controller/'+configOptions.entityName+'Controller.java'},
+            ];
+        }
+        this.generateMainJavaCode(configOptions, mainJavaController);
     }
 
 

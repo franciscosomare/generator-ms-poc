@@ -60,10 +60,6 @@ dependencies {
     <%_ if (eurekaClient === true) { _%>
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     <%_ } _%>
-    <%_ if (distTracing === true) { _%>
-    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
-    <%_ } _%>
     implementation "io.springfox:springfox-swagger2:${swaggerVersion}"
     implementation "io.springfox:springfox-swagger-ui:${swaggerVersion}"
 
