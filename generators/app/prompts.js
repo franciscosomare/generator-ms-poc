@@ -11,7 +11,7 @@ function prompting() {
         {
             type: 'list',
             name: 'appType',
-            message: 'You will use this Generator to create a SpringBoot application',
+            message: 'Bienvenido al Acelerador de Microservicios, presione ENTER para continuar',
             choices: [
                 {
                     value: 'microservice',
