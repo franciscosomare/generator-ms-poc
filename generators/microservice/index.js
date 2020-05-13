@@ -33,6 +33,9 @@ module.exports = class extends BaseGenerator {
         this.generateGithubCIfile(this.configOptions);
         this._generateDockerComposeFiles(this.configOptions);
         this._generateAppCode(this.configOptions);
+        if (this.configOptions.distTracing === true) {
+            this._generateDistTracingConfig(this.configOptions);
+        }
     }
 
     end() {
@@ -73,11 +76,6 @@ module.exports = class extends BaseGenerator {
 
     _generateDockerComposeFiles(configOptions) {
         this._generateAppDockerComposeFile(configOptions);
-        this._generateELKConfig(configOptions);
-        this._generateMonitoringConfig(configOptions);
-        if(configOptions.distTracing === true) {
-            this._generateDistTracingDockerComposeFile(configOptions);
-        }
     }
 
     _generateAppDockerComposeFile(configOptions) {
@@ -94,25 +92,11 @@ module.exports = class extends BaseGenerator {
         this.generateFiles(configOptions, resTemplates, 'app/','docker/');
     }
 
-    _generateELKConfig(configOptions) {
-        const resTemplates = [
-            'docker/docker-compose-elk.yml',
-            'config/elk/logstash.conf',
+    _generateDistTracingConfig(configOptions) {
+        const restTemplates = [
+            'config/TracerConfig.java'
         ];
-        this.generateFiles(configOptions, resTemplates, 'app/','./');
-    }
-
-    _generateMonitoringConfig(configOptions) {
-        const resTemplates = [
-            'docker/docker-compose-monitoring.yml',
-            'config/prometheus/prometheus.yml',
-        ];
-        this.generateFiles(configOptions, resTemplates, 'app/','./');
-
-        this.fs.copy(
-            this.templatePath('app/config/grafana'),
-            this.destinationPath('config/grafana')
-        );
+        this.generateMainJavaCode(configOptions, restTemplates);
     }
 
 };

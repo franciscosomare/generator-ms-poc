@@ -4,12 +4,19 @@ services:
   <%= appName %>:
     build: ../
     container_name: <%= appName %>
+    <%_ if (distTracing === true) { _%>
+    environment:
+      - "JAEGER_AGENT_HOST=jaeger"
+      - "JAEGER_AGENT_PORT=6831"
+    <%_ } _%>
     ports:
-      - "18080:8080"
-      - "18787:8787"
+      - "8080:8080"
+      - "8083:8383"
     restart: always
-    depends_on:
-      - <%= databaseType %>db
+    <%_ if (distTracing === true) { _%>
+    links:
+      - jaeger
+    <%_ } _%>
 
 <%_ if (databaseType === 'postgresql') { _%>
   postgresqldb:
@@ -35,15 +42,48 @@ services:
       - "3306:3306"
 
   <%_ } _%>
-<%_ if (databaseType === 'mariadb') { _%>
-  mariadb:
-    image: mariadb
-    container_name: mariadb
+
+<%_ if (elkjaeger === true) { _%>
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.0
     environment:
-      - MYSQL_DATABASE: appdb
-      - MYSQL_USER: siva
-      - MYSQL_PASSWORD: secret
-      - MYSQL_ROOT_PASSWORD: root
+      - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     ports:
-      - "3306:3306"
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.8.0
+    environment:
+      - "SERVER_NAME=kibana"
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+    ports:
+      - 5601:5601
+    links:
+      - elasticsearch
+  <%_ } _%>
+
+
+<%_ if (distTracing === true) { _%>
+  jaeger:
+    image: jaegertracing/all-in-one:1.12
+    <%_ if (elkjaeger === true) { _%>
+    environment:
+      - "SPAN_STORAGE_TYPE=elasticsearch"
+      - "ES_SERVER_URLS=http://elasticsearch:9200"
+      - "ES_TAGS_AS_FIELDS_ALL=true"
+    <%_ } _%>
+    ports:
+      - "16686:16686"
+    restart: on-failure
+    <%_ if (elkjaeger === true) { _%>
+    links:
+      - elasticsearch
+    <%_ } _%>
 <%_ } _%>
