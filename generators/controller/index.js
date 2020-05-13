@@ -22,7 +22,7 @@ module.exports = class extends BaseGenerator {
     }
 
     get initializing() {
-        this.logSuccess('Generating JPA entity, repository, service and controller');
+        this.logSuccess('Genearndo JPA entity, repository, service, model, exception y controller');
         return {
             validateEntityName() {
                 const context = this.context;
@@ -48,46 +48,17 @@ module.exports = class extends BaseGenerator {
             {src: 'entity/Entity.java', dest: 'entity/'+configOptions.entityName+'.java'},
             {src: 'repository/Repository.java', dest: 'repository/'+configOptions.entityName+'Repository.java'},
             {src: 'service/Service.java', dest: 'service/'+configOptions.entityName+'Service.java'},
-            {src: 'web/controller/Controller.java', dest: 'web/controller/'+configOptions.entityName+'Controller.java'},
+            {src: 'service/impl/ServiceImpl.java', dest: 'service/impl/'+configOptions.entityName+'ServiceImpl.java'},
+            {src: 'exception/ExceptionResponse.java', dest: 'exception/ExceptionResponse.java'},
+            {src: 'exception/ModelNotFoundException.java', dest: 'exception/ModelNotFoundException.java'},
+            {src: 'exception/ResponseExceptionHandler.java', dest: 'exception/ResponseExceptionHandler.java'},
+            {src: 'model/Request.java', dest: 'model/'+configOptions.entityName+'Request.java'},
+            {src: 'controller/Controller.java', dest: 'controller/'+configOptions.entityName+'Controller.java'},
         ];
         this.generateMainJavaCode(configOptions, mainJavaTemplates);
 
         const testJavaTemplates = [
         ];
         this.generateTestJavaCode(configOptions, testJavaTemplates);
-    }
-
-
-    _generateFlywayMigration(configOptions) {
-        const supportSequences = this._supportDatabaseSequences(configOptions.databaseType);
-        const counter = configOptions[constants.KEY_FLYWAY_MIGRATION_COUNTER] + 1;
-        let vendor = configOptions.databaseType;
-        if(vendor === "mariadb") {
-            vendor = "mysql";
-        }
-        const scriptTemplate = supportSequences ? "V1__new_table_with_seq.sql" : "V1__new_table_no_seq.sql";
-
-        this.fs.copyTpl(
-            this.templatePath('app/src/main/resources/db/migration/flyway/V1__new_table_with_seq.sql'),
-            this.destinationPath('src/main/resources/db/migration/h2/V'+counter+'__create_'+configOptions.tableName+'_table.sql'),
-            configOptions
-        );
-        this.fs.copyTpl(
-            this.templatePath('app/src/main/resources/db/migration/flyway/'+scriptTemplate),
-            this.destinationPath('src/main/resources/db/migration/'+vendor+
-                '/V'+counter+'__create_'+configOptions.tableName+'_table.sql'),
-            configOptions
-        );
-        const flywayMigrantCounter = {
-            [constants.KEY_FLYWAY_MIGRATION_COUNTER]: counter
-        };
-        //const updatedConfig = Object.assign({}, this.config.getAll(), flywayMigrantCounter);
-        this.config.set(flywayMigrantCounter);
-    }
-
-    _supportDatabaseSequences(databaseType) {
-        return  databaseType === 'h2' ||
-            databaseType === 'postgresql'
-            ;
     }
 };

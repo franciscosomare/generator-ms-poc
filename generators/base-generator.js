@@ -24,7 +24,7 @@ module.exports = class extends Generator {
 
     printGenerationSummary(configOptions) {
         this.logError("==========================================");
-        this.logSuccess("Your application is generated successfully");
+        this.logSuccess("Su aplicacion se ha creado correctamente");
         this.logSuccess(`  cd ${configOptions.appName}`);
         if(configOptions.buildTool === 'maven') {
             this.logSuccess("  > ./mvnw spring-boot:run")
@@ -40,39 +40,6 @@ module.exports = class extends Generator {
         } else {
             this._generateGradleConfig(configOptions);
         }
-    }
-
-    generateDockerConfig(configOptions) {
-        this.fs.copyTpl(
-            this.templatePath('app/Dockerfile'),
-            this.destinationPath('Dockerfile'),
-            configOptions
-        );
-    }
-
-    generateJenkinsfile(configOptions) {
-        this.fs.copyTpl(
-            this.templatePath('app/Jenkinsfile'),
-            this.destinationPath('Jenkinsfile'),
-            configOptions
-        );
-    }
-
-    generateTravisCIfile(configOptions) {
-        this.fs.copyTpl(
-            this.templatePath('app/.travis.yml'),
-            this.destinationPath('.travis.yml'),
-            configOptions
-        );
-    }
-
-    generateGithubCIfile(configOptions) {
-        const ciFile = '.github/workflows/'+configOptions.buildTool+'.yml';
-        this.fs.copyTpl(
-            this.templatePath('app/'+ciFile),
-            this.destinationPath(ciFile),
-            configOptions
-        );
     }
 
     _generateMavenConfig(configOptions) {

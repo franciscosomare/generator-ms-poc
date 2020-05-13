@@ -1,4 +1,4 @@
-package <%= packageName %>.utils;
+package <%= packageName %>.constant;
 
 public final class Constants {
     private Constants(){}
