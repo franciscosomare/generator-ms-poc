@@ -99,25 +99,4 @@ module.exports = class extends BaseGenerator {
         this.generateMainJavaCode(configOptions, restTemplates);
     }
 
-    _generateELKConfig(configOptions) {
-        const resTemplates = [
-            'docker/docker-compose-elk.yml',
-            'config/elk/logstash.conf',
-        ];
-        this.generateFiles(configOptions, resTemplates, 'app/','./');
-    }
-
-    _generateMonitoringConfig(configOptions) {
-        const resTemplates = [
-            'docker/docker-compose-monitoring.yml',
-            'config/prometheus/prometheus.yml',
-        ];
-        this.generateFiles(configOptions, resTemplates, 'app/','./');
-
-        this.fs.copy(
-            this.templatePath('app/config/grafana'),
-            this.destinationPath('config/grafana')
-        );
-    }
-
 };
