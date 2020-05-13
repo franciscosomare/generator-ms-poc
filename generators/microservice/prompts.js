@@ -15,8 +15,8 @@ function prompting() {
                 /^([a-z_][a-z0-9_]*)$/.test(input)
                     ? true
                     : 'The application name you have provided is not valid',
-            message: 'What is the application name?',
-            default: 'myservice'
+            message: 'Cual es el nombre de la Aplicacion?',
+            default: 'miservicio'
         },
         {
             type: 'string',
@@ -25,20 +25,20 @@ function prompting() {
                 /^([a-z_]{1}[a-z0-9_]*(\.[a-z_]{1}[a-z0-9_]*)*)$/.test(input)
                     ? true
                     : 'The package name you have provided is not a valid Java package name.',
-            message: 'What is the default package name?',
+            message: 'Cual es paquete por default?',
             default: 'com.mycompany.myservice'
         },
         {
             type: 'confirm',
             name: 'sql',
-            message: 'Do you want to use Spring Data Jpa?',
+            message: 'Desea usar Spring Jpa?',
             default: true
         },
         {
             when: response => response.sql === true,
             type: 'list',
             name: 'databaseType',
-            message: 'Which type of database you want to use?',
+            message: 'Que Tipo de Bases de Datos va a usar?',
             choices: [
                 {
                     value: 'postgresql',
@@ -58,7 +58,7 @@ function prompting() {
         {
             type: 'list',
             name: 'buildTool',
-            message: 'Which build tool do you want to use?',
+            message: 'Que Herramienta de Building se usara?',
             choices: [
                 {
                     value: 'maven',

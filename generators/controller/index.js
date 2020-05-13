@@ -22,7 +22,7 @@ module.exports = class extends BaseGenerator {
     }
 
     get initializing() {
-        this.logSuccess('Generating JPA entity, repository, service and controller');
+        this.logSuccess('Generating model, repository, service, impl and rest');
         return {
             validateEntityName() {
                 const context = this.context;
@@ -45,10 +45,11 @@ module.exports = class extends BaseGenerator {
 
     _generateAppCode(configOptions) {
         const mainJavaTemplates = [
-            {src: 'entity/Entity.java', dest: 'entity/'+configOptions.entityName+'.java'},
+            {src: 'domain/Entity.java', dest: 'entity/'+configOptions.entityName+'.java'},
             {src: 'repository/Repository.java', dest: 'repository/'+configOptions.entityName+'Repository.java'},
             {src: 'service/Service.java', dest: 'service/'+configOptions.entityName+'Service.java'},
-            {src: 'web/controller/Controller.java', dest: 'web/controller/'+configOptions.entityName+'Controller.java'},
+            {src: 'service/impl/ServiceImpl.java', dest: 'service/impl/'+configOptions.entityName+'ServiceImpl.java'},
+            {src: 'rest/Rest.java', dest: 'rest/'+configOptions.entityName+'Rest.java'},
         ];
         this.generateMainJavaCode(configOptions, mainJavaTemplates);
 
@@ -57,7 +58,7 @@ module.exports = class extends BaseGenerator {
         this.generateTestJavaCode(configOptions, testJavaTemplates);
     }
 
-
+/*
     _generateFlywayMigration(configOptions) {
         const supportSequences = this._supportDatabaseSequences(configOptions.databaseType);
         const counter = configOptions[constants.KEY_FLYWAY_MIGRATION_COUNTER] + 1;
@@ -90,4 +91,5 @@ module.exports = class extends BaseGenerator {
             databaseType === 'postgresql'
             ;
     }
+*/
 };

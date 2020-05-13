@@ -28,10 +28,10 @@ module.exports = class extends BaseGenerator {
     writing() {
         this.generateBuildToolConfig(this.configOptions);
         this.generateDockerConfig(this.configOptions);
-        this.generateJenkinsfile(this.configOptions);
-        this.generateTravisCIfile(this.configOptions);
-        this.generateGithubCIfile(this.configOptions);
-        this._generateDockerComposeFiles(this.configOptions);
+        //this.generateJenkinsfile(this.configOptions);
+        //this.generateTravisCIfile(this.configOptions);
+        //this.generateGithubCIfile(this.configOptions);
+        //this._generateDockerComposeFiles(this.configOptions);
         this._generateAppCode(this.configOptions);
     }
 
@@ -45,6 +45,7 @@ module.exports = class extends BaseGenerator {
             'Application.java',
             'config/WebMvcConfig.java',
             'config/SwaggerConfig.java',
+            'exception/ExceptionResponse.java',
             'utils/Constants.java'
         ];
         this.generateMainJavaCode(configOptions, mainJavaTemplates);
@@ -73,11 +74,11 @@ module.exports = class extends BaseGenerator {
 
     _generateDockerComposeFiles(configOptions) {
         this._generateAppDockerComposeFile(configOptions);
-        this._generateELKConfig(configOptions);
-        this._generateMonitoringConfig(configOptions);
-        if(configOptions.distTracing === true) {
-            this._generateDistTracingDockerComposeFile(configOptions);
-        }
+        //this._generateELKConfig(configOptions);
+        //this._generateMonitoringConfig(configOptions);
+        //if(configOptions.distTracing === true) {
+        //    this._generateDistTracingDockerComposeFile(configOptions);
+        //}
     }
 
     _generateAppDockerComposeFile(configOptions) {
@@ -87,6 +88,7 @@ module.exports = class extends BaseGenerator {
         this.generateFiles(configOptions, resTemplates, 'app/','docker/');
     }
 
+    /*
     _generateDistTracingDockerComposeFile(configOptions) {
         const resTemplates = [
             'docker-compose-tracing.yml',
@@ -114,5 +116,6 @@ module.exports = class extends BaseGenerator {
             this.destinationPath('config/grafana')
         );
     }
+    */
 
 };

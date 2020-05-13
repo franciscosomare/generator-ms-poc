@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("<%= basePath %>")
 @Slf4j
-public class <%= entityName %>Controller {
+public class <%= entityName %>Rest {
 
     private final <%= entityName %>Service <%= entityVarName %>Service;
 

@@ -24,7 +24,7 @@ module.exports = class extends Generator {
 
     printGenerationSummary(configOptions) {
         this.logError("==========================================");
-        this.logSuccess("Your application is generated successfully");
+        this.logSuccess("La Aplicacion fue generada exitosamente");
         this.logSuccess(`  cd ${configOptions.appName}`);
         if(configOptions.buildTool === 'maven') {
             this.logSuccess("  > ./mvnw spring-boot:run")
@@ -50,6 +50,8 @@ module.exports = class extends Generator {
         );
     }
 
+    /*
+
     generateJenkinsfile(configOptions) {
         this.fs.copyTpl(
             this.templatePath('app/Jenkinsfile'),
@@ -74,6 +76,8 @@ module.exports = class extends Generator {
             configOptions
         );
     }
+
+    */
 
     _generateMavenConfig(configOptions) {
         this.copyMavenWrapper(configOptions);
